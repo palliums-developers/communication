@@ -1,26 +1,30 @@
 #! /usr/bin/pydoc3
 import threading
-from src.exception_ext import (
+from .exception_ext import (
         ReadonlyException,
         )
 
 
 class base(object):
-    def __init__(self, host, port = 8055, authkey = b"violas bridge communication"):
+    def __init__(self, host, port = 8055, authkey = b"violas bridge communication", **kwargs):
         self.host = host
         self.port = port
         self.address = (self.host, self.port)
         self.authkey = authkey
         self.working = False
-        print(f"start communication host = {self.host} port = {self.port} authkey = {self.authkey}")
+        self.logger = kwargs.get("logger")
+        self.kwargs = kwargs
+        self.show_msg(f"start communication host = {self.host} port = {self.port} authkey = {self.authkey}")
         
 
     def __del__(self):
-        print("close")
+        self.show_msg("close")
+
+    def name(self):
+        return "communication"
 
     class work_thread(threading.Thread):
         def __init__(self, call, parse_msg, **kwargs):
-            print(f"work thread __init__(kwargs = {kwargs})")
             threading.Thread.__init__(self)
             self.__kwargs = kwargs
             self.__call = call
@@ -52,10 +56,15 @@ class base(object):
     def is_working(self):
         return self.working
 
-    def stop_work(self):
-        print("base.stop_work")
+    def work_stop(self):
         self.working = False
 
+    def show_msg(self, msg):
+        if self.logger:
+            self.logger.debug(msg)
+        else:
+            print(msg)
+        
     def call(self, cmd, conn = None, listener = None, **kwargs):
         pass
 

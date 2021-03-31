@@ -6,7 +6,7 @@ from multiprocessing.connection import (
         )
 
 from array import array
-from src.base import (
+from .base import (
         base,
         )
 
@@ -14,7 +14,7 @@ name = "multi_client"
 
 class client(base):
     def __init__(self, host, port = 8055, authkey = b"violas bridge communication", call = None, **kwargs):
-        base.__init__(self, host, port, authkey)
+        base.__init__(self, host, port, authkey, **kwargs)
         self.conn = Client(self.address, authkey = self.authkey)
         if call:
             self.start_connect(call, **kwargs)
@@ -34,9 +34,9 @@ class client(base):
                 cmd = self.conn.recv()
                 call(cmd, conn = self.conn)
 
-    def start_connect(self, call, **kwargs):
+    def start(self, call):
         self.working = self.connected
-        self.recv_thread = self.work_thread(self.work, call, **kwargs)
+        self.recv_thread = self.work_thread(self.work, call, **self.kwargs)
         self.recv_thread.start()
 
     def send(self, cmd):
@@ -46,6 +46,6 @@ class client(base):
             raise Exception(f"not connect to server(self.address)")
 
     def close(self):
-        self.stop_work()
+        self.work_stop()
         if self.connected:
             self.conn.close()

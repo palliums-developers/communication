@@ -26,5 +26,5 @@ def parse_msg(cmd, conn = None, listener = None, **kwargs):
 
 
 svr = server("127.0.0.1", 8888)
-svr.start_listen(parse_msg)
+svr.start(parse_msg)
 

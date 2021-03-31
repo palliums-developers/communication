@@ -1,7 +1,7 @@
-from src.client import client
-from src.server import server
+from .client import client
+from .server import server
 
 __all__ = [
-        "client"
+        "client",
         "server"
         ]

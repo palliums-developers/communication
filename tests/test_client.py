@@ -18,7 +18,7 @@ def parse_msg(cmd, conn = None, listener = None, **kwargs):
 
 
 cli = client("127.0.0.1", 8888)
-cli.start_connect(parse_msg)
+cli.start(parse_msg)
 time.sleep(1)
 cli.send("msg 1")
 time.sleep(1)
