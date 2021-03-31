@@ -1,7 +1,4 @@
 #! /usr/bin/pydoc3
-from comm.result import (
-        parse_except,
-        )
 from multiprocessing.connection import (
         Client,
         Listener,
@@ -9,14 +6,9 @@ from multiprocessing.connection import (
         )
 
 from array import array
-from communication.base import (
+from src.base import (
         base,
         )
-
-import comm.error
-import comm.result
-import comm.values
-
 
 name = "multi_client"
 
@@ -43,12 +35,9 @@ class client(base):
                 call(cmd, conn = self.conn)
 
     def start_connect(self, call, **kwargs):
-        try:
-            self.working = self.connected
-            self.recv_thread = self.work_thread(self.work, call, **kwargs)
-            self.recv_thread.start()
-        except Exception as e:
-            ret = parse_except(e)
+        self.working = self.connected
+        self.recv_thread = self.work_thread(self.work, call, **kwargs)
+        self.recv_thread.start()
 
     def send(self, cmd):
         if self.connected:

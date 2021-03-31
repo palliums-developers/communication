@@ -1,10 +1,6 @@
 #! /usr/bin/pydoc3
 import threading
-from comm.result import (
-        parse_except,
-        )
-
-from comm.exception_ext import (
+from src.exception_ext import (
         ReadonlyException,
         )
 

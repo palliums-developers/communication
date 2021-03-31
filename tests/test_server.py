@@ -10,7 +10,7 @@ sys.path.append("..")
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../"))
 
 
-from communication.server import (
+from src import (
         server
         )
 def parse_msg(cmd, conn = None, listener = None, **kwargs):
