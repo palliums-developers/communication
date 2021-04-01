@@ -6,6 +6,7 @@ from .exception_ext import (
 
 
 class base(object):
+    __NAME = "comm"
     def __init__(self, host, port = 8055, authkey = b"violas bridge communication", **kwargs):
         self.host = host
         self.port = port
@@ -14,14 +15,15 @@ class base(object):
         self.working = False
         self.logger = kwargs.get("logger")
         self.kwargs = kwargs
-        self.show_msg(f"start communication host = {self.host} port = {self.port} authkey = {self.authkey}")
+        self.__name = kwargs.get("name", self.__NAME)
+        self.show_msg(f"start communication host = {self.host} port = {self.port}")
         
 
     def __del__(self):
         self.show_msg("close")
 
     def name(self):
-        return "communication"
+        return self.__name
 
     class work_thread(threading.Thread):
         def __init__(self, call, parse_msg, **kwargs):

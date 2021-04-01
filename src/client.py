@@ -17,7 +17,7 @@ class client(base):
         base.__init__(self, host, port, authkey, **kwargs)
         self.conn = Client(self.address, authkey = self.authkey)
         if call:
-            self.start_connect(call, **kwargs)
+            self.start(call, **kwargs)
 
     def __del__(self):
         if self.is_working():
@@ -28,11 +28,14 @@ class client(base):
         return self.conn and not self.conn.closed
 
     def work(self, call, **kwargs):
-        while self.is_working() and self.connected:
-            had_data = self.conn.poll(1)
-            if had_data and self.connected:
-                cmd = self.conn.recv()
-                call(cmd, conn = self.conn)
+        try:
+            while self.is_working() and self.connected:
+                had_data = self.conn.poll(1)
+                if had_data and self.connected:
+                    cmd = self.conn.recv()
+                    call(cmd, conn = self.conn)
+        except Exception as e:
+            print(e)
 
     def start(self, call):
         self.working = self.connected
