@@ -25,9 +25,9 @@ class server(base):
         if self.listend:
             self.listener.close()
 
-
+    @property
     def listend(self):
-        return self.listener and not self.listener.closed
+        return self.listener is not None
 
     def parse_msg(self, cmd, conn, listener, call, **kwargs):
 
@@ -38,7 +38,6 @@ class server(base):
             if not conn.closed:
                 conn.close()
         elif cmd in ("__shutdown__"):
-            conn.send(f"shutdown...")
             self.work_stop()
         else:
             #conn.send(f"{cmd} is invalid")
@@ -59,7 +58,7 @@ class server(base):
                             return
                 except Exception as e:
                      self.show_msg(f"connect error: {e}")
-                     break
+                print(self.is_working())
     
     def start(self, call):
         if self.is_working():
@@ -71,7 +70,7 @@ class server(base):
 
     def stop(self):
         try:
-            if self.listend:
+            if self.listend and self.is_working():
                 client(self.host, self.port, self.authkey, logger = self.logger).send("__shutdown__")
         except Exception as e:
             pass
