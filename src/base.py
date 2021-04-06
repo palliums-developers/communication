@@ -1,5 +1,6 @@
 #! /usr/bin/pydoc3
 import threading
+import time
 from .exception_ext import (
         ReadonlyException,
         )
@@ -46,7 +47,8 @@ class base(object):
         return False
 
     def __setattr__(self, name, value):
-        if not self.can_write(name):
+
+        if not self.can_write(name) and not name.startswith("_"):
             raise ReadonlyException(name)
         else:
             object.__setattr__(self, name, value)
@@ -66,6 +68,9 @@ class base(object):
             self.logger.debug(msg)
         else:
             print(msg)
+        
+    def wait(nsec = 1):
+        time.sleep(1)
         
     def call(self, cmd, conn = None, listener = None, **kwargs):
         pass
